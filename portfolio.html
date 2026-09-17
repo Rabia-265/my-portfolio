@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio — Frontend Developer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff;
+    --surface: #f1f2f6;
+    --ink: #14151a;
+    --ink-dim: #5a5d66;
+    --border: #e3e4ea;
+    --accent: #2451ff;
+    --serif: 'Fraunces', Georgia, serif;
+    --sans: 'Inter', system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--sans); line-height: 1.55; -webkit-font-smoothing: antialiased; }
+  ::selection { background: var(--accent); color: #fff; }
+  a { color: inherit; }
+  img { max-width: 100%; display: block; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
+
+  .masthead { display: flex; justify-content: space-between; align-items: center; padding: 26px 32px; border-bottom: 1px solid var(--border); }
+  .masthead .name { font-family: var(--serif); font-size: 19px; font-weight: 600; }
+  .masthead nav { display: flex; gap: 30px; font-size: 14px; color: var(--ink-dim); }
+  .masthead nav a { text-decoration: none; transition: color .15s; }
+  .masthead nav a:hover { color: var(--ink); }
+  .masthead .cta { font-size: 14px; background: var(--ink); color: #fff; padding: 9px 18px; text-decoration: none; border-radius: 100px; }
+
+  .hero { padding: 90px 0 70px; border-bottom: 1px solid var(--border); }
+  .hero-top { display: flex; justify-content: space-between; gap: 40px; align-items: flex-end; margin-bottom: 46px; }
+  .hero-role { font-size: 15px; color: var(--ink-dim); max-width: 30ch; text-align: right; }
+  h1.hero-title { font-family: var(--serif); font-weight: 600; font-size: clamp(48px, 8vw, 92px); line-height: 0.98; margin: 0; letter-spacing: -0.01em; }
+  h1.hero-title em { font-style: italic; color: var(--accent); font-weight: 500; }
+  .hero-sub { display: flex; justify-content: space-between; align-items: flex-end; gap: 30px; flex-wrap: wrap; }
+  .hero-desc { font-size: 17px; color: var(--ink-dim); max-width: 46ch; }
+  .hero-actions { display: flex; gap: 12px; }
+  .btn { font-size: 14.5px; text-decoration: none; padding: 13px 24px; border-radius: 100px; display: inline-block; transition: opacity .15s ease, transform .15s ease; }
+  .btn:hover { transform: translateY(-1px); }
+  .btn-solid { background: var(--accent); color: #fff; font-weight: 500; }
+  .btn-outline { border: 1px solid var(--border); color: var(--ink); }
+
+  .section { padding: 70px 0; border-bottom: 1px solid var(--border); }
+  .section-label { font-size: 13px; color: var(--ink-dim); margin-bottom: 8px; }
+  .section-title { font-family: var(--serif); font-size: 34px; font-weight: 600; margin: 0 0 40px; }
+
+  .about-grid { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 56px; }
+  .about-lead { font-family: var(--serif); font-size: 25px; font-weight: 500; line-height: 1.35; }
+  .about-lead .accent { color: var(--accent); font-style: italic; }
+  .about-meta { display: flex; flex-direction: column; gap: 18px; }
+  .about-meta .row { display: flex; justify-content: space-between; border-bottom: 1px solid var(--border); padding-bottom: 14px; font-size: 14.5px; }
+  .about-meta .row .k { color: var(--ink-dim); }
+  .about-meta .row .v { font-weight: 500; text-align: right; }
+
+  .skills-inline { display: flex; flex-wrap: wrap; gap: 10px 0; font-family: var(--serif); font-size: clamp(20px, 3vw, 30px); font-weight: 500; color: var(--ink-dim); }
+  .skills-inline span.item { color: var(--ink); }
+  .skills-inline span.sep { margin: 0 16px; color: var(--border); }
+
+  .project { display: grid; grid-template-columns: 1fr 1.1fr; gap: 40px; align-items: center; padding: 40px 0; border-top: 1px solid var(--border); }
+  .project:first-of-type { border-top: none; }
+  .project-visual { background: var(--surface); border-radius: 4px; aspect-ratio: 4/3; display: flex; align-items: center; justify-content: center; font-family: var(--serif); font-size: 15px; color: var(--ink-dim); position: relative; overflow: hidden; }
+  .project-visual .num { position: absolute; top: 16px; left: 18px; font-size: 13px; font-family: var(--sans); color: var(--ink-dim); }
+  .project-info .p-title { font-family: var(--serif); font-size: 28px; font-weight: 600; margin: 0 0 12px; }
+  .project-info .p-desc { color: var(--ink-dim); font-size: 15px; max-width: 48ch; margin: 0 0 18px; }
+  .project-info .p-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+  .p-tag { font-size: 12.5px; color: var(--ink-dim); border: 1px solid var(--border); padding: 4px 12px; border-radius: 100px; }
+  .project-info .p-links { display: flex; gap: 20px; }
+  .project-info .p-links a { font-size: 14px; text-decoration: none; border-bottom: 1px solid var(--ink); padding-bottom: 2px; }
+  .project-info .p-links a:hover { border-color: var(--accent); color: var(--accent); }
+  .status-chip { font-size: 12px; padding: 4px 11px; border-radius: 100px; display: inline-block; margin-bottom: 14px; }
+  .status-chip.live { background: #e6f4ea; color: #1e7d3c; }
+  .status-chip.build { background: #fff2df; color: #a15c00; }
+
+  @media (max-width: 760px) {
+    .about-grid, .project { grid-template-columns: 1fr; }
+    .hero-top, .hero-sub { flex-direction: column; align-items: flex-start; }
+    .hero-role { text-align: left; }
+    .masthead nav { display: none; }
+  }
+
+  .cta-block { background: var(--ink); color: #fff; border-radius: 6px; padding: 64px 48px; text-align: center; }
+  .cta-block h2 { font-family: var(--serif); font-size: clamp(30px, 5vw, 48px); margin: 0 0 16px; }
+  .cta-block h2 em { color: var(--accent); font-style: italic; }
+  .cta-block p { color: #b8bac2; max-width: 46ch; margin: 0 auto 30px; }
+  .cta-block .btn-solid { background: var(--accent); }
+
+  footer { padding: 30px 32px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; font-size: 13px; color: var(--ink-dim); }
+</style>
+</head>
+<body>
+
+<header class="masthead wrap" style="max-width:1120px; margin:0 auto;">
+  <div class="name">Rabia Sheroze</div>
+  <nav>
+    <a href="#about">About</a>
+    <a href="#work">Work</a>
+    <a href="#contact">Contact</a>
+  </nav>
+  <a class="cta" href="#contact">Hire me</a>
+</header>
+
+<main class="wrap">
+
+  <section class="hero">
+    <div class="hero-top">
+      <h1 class="hero-title">Frontend<br><em>Developer.</em></h1>
+      <p class="hero-role">I build websites that look great and work even better — clean code, responsive design.</p>
+    </div>
+    <div class="hero-sub">
+      <p class="hero-desc">
+        I build clean, responsive websites that turn simple ideas into real, working products.
+      </p>
+      <div class="hero-actions">
+        <a class="btn btn-solid" href="#work">View my work</a>
+        <a class="btn btn-outline" href="#contact">Let's talk</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="about">
+    <div class="section-label">About</div>
+    <div class="about-grid">
+      <p class="about-lead">
+        I build interfaces that feel <em class="accent">simple</em> —
+        because every detail was thought through carefully.
+      </p>
+      <div class="about-meta">
+        <div class="row"><span class="k">Based in</span><span class="v">Pakistan</span></div>
+        <div class="row"><span class="k">Focus</span><span class="v">Frontend Development</span></div>
+        <div class="row"><span class="k">Experience</span><span class="v">Beginner — actively building</span></div>
+        <div class="row"><span class="k">Available for</span><span class="v">Freelance / Internship</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="skills">
+    <div class="section-label">Skills</div>
+    <div class="skills-inline">
+      <span class="item">HTML</span><span class="sep">/</span>
+      <span class="item">CSS</span><span class="sep">/</span>
+      <span class="item">JavaScript</span><span class="sep">/</span>
+      <span class="item">Responsive Design</span><span class="sep">/</span>
+      <span class="item">Git &amp; GitHub</span>
+    </div>
+  </section>
+
+  <section class="section" id="work">
+    <div class="section-label">Selected Work</div>
+    <h2 class="section-title">Projects</h2>
+
+    <div class="project">
+      <div class="project-visual"><span class="num">01</span>To-Do App preview</div>
+      <div class="project-info">
+        <span class="status-chip live">Live</span>
+        <h3 class="p-title">To-Do List App</h3>
+        <p class="p-desc">A task manager with add, edit, and delete — data is saved to localStorage so nothing gets lost on refresh.</p>
+        <div class="p-tags"><span class="p-tag">JavaScript</span><span class="p-tag">DOM</span></div>
+        <div class="p-links"><a href="todo-app.html">Live Demo</a><a href="#">GitHub</a></div>
+      </div>
+    </div>
+
+    <div class="project">
+      <div class="project-visual"><span class="num">02</span>Weather App preview</div>
+      <div class="project-info">
+        <span class="status-chip live">Live</span>
+        <h3 class="p-title">Weather App</h3>
+        <p class="p-desc">Search any city and get live weather data pulled from a free API.</p>
+        <div class="p-tags"><span class="p-tag">API</span><span class="p-tag">Fetch</span></div>
+        <div class="p-links"><a href="weather-app.html">Live Demo</a><a href="#">GitHub</a></div>
+      </div>
+    </div>
+
+    <div class="project">
+      <div class="project-visual"><span class="num">03</span>Landing Page preview</div>
+      <div class="project-info">
+        <span class="status-chip live">Live</span>
+        <h3 class="p-title">Landing Page Design</h3>
+        <p class="p-desc">An original SaaS landing page built from scratch, focused on clean layout and conversion-friendly design.</p>
+        <div class="p-tags"><span class="p-tag">HTML</span><span class="p-tag">CSS</span></div>
+        <div class="p-links"><a href="landing-page.html">Live Demo</a><a href="#">GitHub</a></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="contact" style="border-bottom:none;">
+    <div class="cta-block">
+      <h2>Let's <em>build</em> something.</h2>
+      <p>Have a project or an idea? Email me and let's talk through the details.</p>
+      <a class="btn btn-solid" href="mailto:you@example.com">Send an email</a>
+    </div>
+  </section>
+
+</main>
+
+<footer class="wrap" style="max-width:1120px; margin:0 auto;">
+  <span>© 2026 Rabia Sheroze</span>
+  <span>LinkedIn — GitHub — Email</span>
+</footer>
+
+</body>
+</html>

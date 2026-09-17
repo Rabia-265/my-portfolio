@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weather App</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 60px;
+    background: linear-gradient(135deg, #2451ff, #6b8cff);
+  }
+  .app {
+    background: #ffffff;
+    width: 100%;
+    max-width: 380px;
+    border-radius: 14px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+    padding: 30px;
+  }
+  h1 { text-align: center; font-size: 20px; margin: 0 0 20px; color: #14151a; }
+  .search-row { display: flex; gap: 8px; margin-bottom: 22px; }
+  #cityInput {
+    flex: 1; padding: 12px 14px; border: 1px solid #e3e4ea; border-radius: 8px;
+    font-size: 14px; outline: none;
+  }
+  #cityInput:focus { border-color: #2451ff; }
+  #searchBtn {
+    background: #2451ff; color: white; border: none; padding: 0 18px;
+    border-radius: 8px; cursor: pointer; font-size: 14px;
+  }
+  #searchBtn:hover { opacity: 0.9; }
+  .result { text-align: center; min-height: 160px; }
+  .result .city-name { font-size: 18px; font-weight: 600; color: #14151a; margin-bottom: 4px; }
+  .result .temp { font-size: 52px; font-weight: 700; color: #2451ff; margin: 10px 0; }
+  .result .condition { font-size: 15px; color: #5a5d66; margin-bottom: 16px; }
+  .result .extra {
+    display: flex; justify-content: center; gap: 24px; font-size: 13px; color: #5a5d66;
+    border-top: 1px solid #eee; padding-top: 16px; margin-top: 6px;
+  }
+  .result .extra div span { display: block; font-weight: 600; color: #14151a; font-size: 15px; }
+  .placeholder, .error { text-align: center; color: #9aa1ab; font-size: 14px; padding: 40px 0; }
+  .error { color: #c0392b; }
+  .loading { text-align: center; color: #9aa1ab; font-size: 14px; padding: 40px 0; }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <h1>Weather App</h1>
+  <div class="search-row">
+    <input type="text" id="cityInput" placeholder="Enter city name..." value="Karachi">
+    <button id="searchBtn">Search</button>
+  </div>
+  <div class="result" id="result">
+    <p class="placeholder">Search a city to see the weather</p>
+  </div>
+</div>
+
+<script>
+  const cityInput = document.getElementById('cityInput');
+  const searchBtn = document.getElementById('searchBtn');
+  const result = document.getElementById('result');
+
+  // Weather codes se simple description nikalne ke liye
+  function getCondition(code) {
+    if (code === 0) return 'Clear sky';
+    if ([1,2,3].includes(code)) return 'Partly cloudy';
+    if ([45,48].includes(code)) return 'Foggy';
+    if ([51,53,55,56,57].includes(code)) return 'Drizzle';
+    if ([61,63,65,66,67].includes(code)) return 'Rain';
+    if ([71,73,75,77].includes(code)) return 'Snow';
+    if ([80,81,82].includes(code)) return 'Rain showers';
+    if ([95,96,99].includes(code)) return 'Thunderstorm';
+    return 'Unknown';
+  }
+
+  async function searchWeather() {
+    const city = cityInput.value.trim();
+    if (!city) return;
+
+    result.innerHTML = '<p class="loading">Loading...</p>';
+
+    try {
+      // Step 1: City ka naam se latitude/longitude nikalo (free geocoding API)
+      const geoRes = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1`);
+      const geoData = await geoRes.json();
+
+      if (!geoData.results || geoData.results.length === 0) {
+        result.innerHTML = '<p class="error">City not found. Try another name.</p>';
+        return;
+      }
+
+      const { latitude, longitude, name, country } = geoData.results[0];
+
+      // Step 2: Lat/long se live weather nikalo (free weather API, no key needed)
+      const weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,weather_code`);
+      const weatherData = await weatherRes.json();
+      const current = weatherData.current;
+
+      result.innerHTML = `
+        <div class="city-name">${name}, ${country}</div>
+        <div class="temp">${Math.round(current.temperature_2m)}°C</div>
+        <div class="condition">${getCondition(current.weather_code)}</div>
+        <div class="extra">
+          <div>Humidity<span>${current.relative_humidity_2m}%</span></div>
+          <div>Wind<span>${Math.round(current.wind_speed_10m)} km/h</span></div>
+        </div>
+      `;
+    } catch (err) {
+      result.innerHTML = '<p class="error">Something went wrong. Please try again.</p>';
+    }
+  }
+
+  searchBtn.addEventListener('click', searchWeather);
+  cityInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') searchWeather();
+  });
+
+  // Page load hote hi default city ka weather dikha do
+  searchWeather();
+</script>
+
+</body>
+</html>
